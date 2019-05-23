@@ -1,0 +1,4 @@
+<button *ngIf="!isLoading" class="btn btn-primary" (click)="search()">
+  Search
+</button>
+<button *ngIf="isLoading" class="btn btn-primary" disabled>Searching...</button>

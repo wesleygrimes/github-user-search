@@ -1,0 +1,10 @@
+<div class="card" style="width: 18rem;" *ngIf="result">
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="{{ profileUrl }}" target="_blank">{{ result.login }}</a>
+    </h5>
+    <p class="card-text">
+      {{ result | json }}
+    </p>
+  </div>
+</div>
