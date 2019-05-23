@@ -1,4 +1,43 @@
-<button *ngIf="!isLoading" class="btn btn-primary" (click)="search()">
-  Search
-</button>
-<button *ngIf="isLoading" class="btn btn-primary" disabled>Searching...</button>
+<form [formGroup]="form">
+  <div class="form-row">
+    <div class="form-group col-md-8">
+      <label for="query">Query</label>
+      <input
+        type="text"
+        class="form-control"
+        id="query"
+        formControlName="query"
+      />
+    </div>
+    <div class="form-group col-md-2">
+      <label for="sort">Sort</label>
+      <select class="form-control" formControlName="sort"
+        ><option
+          *ngFor="let searchSort of GithubSearchSort"
+          [value]="searchSort"
+          >{{ searchSort }}</option
+        ></select
+      >
+    </div>
+    <div class="form-group col-md-2">
+      <label for="order">Order</label>
+      <select class="form-control" formControlName="order"
+        ><option
+          *ngFor="let searchOrder of GithubSearchOrder"
+          [value]="searchOrder"
+          >{{ searchOrder }}</option
+        ></select
+      >
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col">
+      <button *ngIf="!isLoading" class="btn btn-primary" (click)="search()">
+        Search
+      </button>
+      <button *ngIf="isLoading" class="btn btn-primary" disabled>
+        Searching...
+      </button>
+    </div>
+  </div>
+</form>
