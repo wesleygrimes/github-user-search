@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GithubSearchResult } from '../_models';
 
 @Component({
@@ -7,13 +7,14 @@ import { GithubSearchResult } from '../_models';
   styleUrls: ['./search-result-card.component.css']
 })
 export class SearchResultCardComponent implements OnInit {
+  @Output() showDetails = new EventEmitter<string>();
   @Input() result: GithubSearchResult;
 
   constructor() {}
 
   ngOnInit() {}
 
-  get profileUrl() {
-    return `https://github.com/${this.result.login}`;
+  showUser() {
+    this.showDetails.emit(this.result.url);
   }
 }

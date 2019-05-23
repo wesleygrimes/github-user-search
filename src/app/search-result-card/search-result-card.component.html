@@ -1,10 +1,8 @@
-<div class="card" style="width: 18rem;" *ngIf="result">
+<div (click)="showUser()" class="card" style="width: 18rem;" *ngIf="result">
   <div class="card-body">
     <h5 class="card-title">
-      <a href="{{ profileUrl }}" target="_blank">{{ result.login }}</a>
+      <img src="{{ result.avatar_url }}" />
+      {{ result.login }}
     </h5>
-    <p class="card-text">
-      {{ result | json }}
-    </p>
   </div>
 </div>

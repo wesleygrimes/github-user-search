@@ -1,4 +1,7 @@
-<app-search-result-card
-  *ngFor="let result of results"
-  [result]="result"
-></app-search-result-card>
+<div class="row">
+  <app-search-result-card
+    *ngFor="let result of results"
+    [result]="result"
+    (showDetails)="onShowDetails($event)"
+  ></app-search-result-card>
+</div>

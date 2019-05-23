@@ -5,7 +5,8 @@ import { environment } from 'src/environments/environment';
 import {
   GithubSearchOrder,
   GithubSearchResults,
-  GithubSearchSort
+  GithubSearchSort,
+  GithubUser
 } from '../_models';
 
 @Injectable({
@@ -30,7 +31,7 @@ export class GithubService {
     );
   }
 
-  getUserDetails(userUrl: string) {
-    return this.http.get(userUrl);
+  getUser(url: string) {
+    return this.http.get<GithubUser>(url);
   }
 }

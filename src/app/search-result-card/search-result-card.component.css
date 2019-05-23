@@ -1,0 +1,12 @@
+img {
+  width: 25%;
+  margin-right: 15px;
+}
+
+:host {
+  margin: 25px;
+}
+
+.card {
+  cursor: pointer;
+}

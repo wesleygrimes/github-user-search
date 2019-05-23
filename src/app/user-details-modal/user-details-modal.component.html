@@ -1,0 +1,45 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{ user.name }}</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="row">
+    <div class="col-2">
+      <img src="{{ user.avatar_url }}" />
+    </div>
+    <div class="col-10">
+      <h2>
+        <a href="{{ profileUrl }}" target="_blank">{{ user.login }}</a>
+      </h2>
+    </div>
+  </div>
+  <div class="row" *ngIf="user.bio">
+    <div class="col">
+      <p>{{ user.bio }}</p>
+    </div>
+  </div>
+  <div class="row" *ngIf="user.location">
+    <div class="col">
+      <p>Location: {{ user.location }}</p>
+    </div>
+  </div>
+  <div class="row" *ngIf="user.followers">
+    <div class="col">
+      <p>Followers: {{ user.followers | number }}</p>
+    </div>
+  </div>
+  <div class="row" *ngIf="user.public_repos">
+    <div class="col">
+      <p>Public Repos: {{ user.public_repos | number }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="close()">
+    Close
+  </button>
+</div>

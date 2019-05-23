@@ -40,6 +40,28 @@ export function featureReducer(state = initialState, action: Actions): State {
         error: action.payload.error
       };
     }
+    case ActionTypes.LOAD_USER_REQUEST: {
+      return {
+        ...state,
+        isLoading: true,
+        error: null
+      };
+    }
+    case ActionTypes.LOAD_USER_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        currentUser: action.payload.user
+      };
+    }
+    case ActionTypes.LOAD_USER_FAILURE: {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error
+      };
+    }
     default: {
       return state;
     }

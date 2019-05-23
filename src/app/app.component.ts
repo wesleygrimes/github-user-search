@@ -43,4 +43,10 @@ export class AppComponent implements OnInit {
       })
     );
   }
+
+  onShowDetails(userUrl: string) {
+    this.store.dispatch(
+      new GithubSearchResultsStoreActions.ShowDetailsAction({ userUrl })
+    );
+  }
 }

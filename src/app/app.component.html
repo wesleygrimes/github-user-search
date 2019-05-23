@@ -15,7 +15,10 @@
       ></app-search-form>
     </div>
     <div class="col-12">
-      <app-search-results [results]="results$ | async"></app-search-results>
+      <app-search-results
+        [results]="results$ | async"
+        (showDetails)="onShowDetails($event)"
+      ></app-search-results>
     </div>
   </div>
 </div>

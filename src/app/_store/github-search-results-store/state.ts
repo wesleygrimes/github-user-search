@@ -2,7 +2,8 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import {
   GithubSearchOrder,
   GithubSearchResult,
-  GithubSearchSort
+  GithubSearchSort,
+  GithubUser
 } from 'src/app/_models';
 
 export const featureAdapter = createEntityAdapter<GithubSearchResult>({
@@ -17,6 +18,7 @@ export interface State extends EntityState<GithubSearchResult> {
   currentQuery: string;
   currentSort: GithubSearchSort;
   currentOrder: GithubSearchOrder;
+  currentUser: GithubUser;
 }
 
 export const initialState: State = featureAdapter.getInitialState({
@@ -26,5 +28,6 @@ export const initialState: State = featureAdapter.getInitialState({
   incompleteResults: false,
   currentQuery: null,
   currentSort: GithubSearchSort.Repositories,
-  currentOrder: GithubSearchOrder.Descending
+  currentOrder: GithubSearchOrder.Descending,
+  currentUser: null
 });

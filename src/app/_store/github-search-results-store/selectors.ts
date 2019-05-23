@@ -2,7 +2,8 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import {
   GithubSearchOrder,
   GithubSearchResult,
-  GithubSearchSort
+  GithubSearchSort,
+  GithubUser
 } from 'src/app/_models';
 import { featureAdapter, State } from './state';
 
@@ -44,4 +45,9 @@ export const selectGithubSearchResultsCurrentSort = createSelector(
 export const selectGithubSearchResultsCurrentOrder = createSelector(
   selectGithubSearchResultsState,
   (state: State): GithubSearchOrder => state.currentOrder
+);
+
+export const selectGithubSearchResultsCurrentUser = createSelector(
+  selectGithubSearchResultsState,
+  (state: State): GithubUser => state.currentUser
 );
