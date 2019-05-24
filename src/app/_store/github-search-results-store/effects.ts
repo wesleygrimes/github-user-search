@@ -12,7 +12,7 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { UserDetailsModalComponent } from 'src/app/user-details-modal/user-details-modal.component';
-import { serializeError } from 'src/app/utils/serialize-error';
+import { serializeError } from 'src/app/_utils/serialize-error';
 import { GithubUser } from 'src/app/_models';
 import { GithubService } from 'src/app/_services';
 import { GithubSearchResultsStoreSelectors } from '.';
