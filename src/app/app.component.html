@@ -6,7 +6,13 @@
     devices we support. Each tier starts at a minimum viewport size and
     automatically applies to the larger devices unless overridden.
   </p>
-
+  <div class="row mb-3">
+    <div class="col-12 error" *ngIf="error$ | async as error">
+      <div class="alert alert-danger" role="alert">
+        {{ error }}
+      </div>
+    </div>
+  </div>
   <div class="row mb-3">
     <div class="col-12">
       <app-search-form
@@ -16,8 +22,12 @@
     </div>
     <div class="col-12">
       <app-search-results
-        [results]="results$ | async"
+        [results]="resultsForCurrentPage$ | async"
+        [hasPreviousPage]="hasPreviousPage$ | async"
+        [hasNextPage]="hasNextPage$ | async"
         (showDetails)="onShowDetails($event)"
+        (gotoPreviousPage)="onGotoPreviousPage()"
+        (gotoNextPage)="onGotoNextPage()"
       ></app-search-results>
     </div>
   </div>

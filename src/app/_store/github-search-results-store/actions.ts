@@ -13,7 +13,12 @@ export enum ActionTypes {
   SHOW_DETAILS = '[Search Results] Show Details',
   LOAD_USER_REQUEST = '[Github Search Effect] Load User Request',
   LOAD_USER_FAILURE = '[Github User API] Load User Failure',
-  LOAD_USER_SUCCESS = '[Github User API] Load User Success'
+  LOAD_USER_SUCCESS = '[Github User API] Load User Success',
+  GOTO_NEXT_PAGE = '[Search Results] Goto Next Page',
+  GOTO_PREVIOUS_PAGE = '[Search Results] Goto Previous Page',
+  LOAD_NEXT_PAGE_REQUEST = '[Search Results] Load Next Page Request',
+  LOAD_NEXT_PAGE_FAILURE = '[Github User API] Load Next Page Failure',
+  LOAD_NEXT_PAGE_SUCCESS = '[Github User API] Load Next Page Success'
 }
 
 export class UpdateSearchQueryAction implements Action {
@@ -59,6 +64,28 @@ export class LoadUserSuccessAction implements Action {
   constructor(public payload: { user: GithubUser }) {}
 }
 
+export class GotoNextPageAction implements Action {
+  readonly type = ActionTypes.GOTO_NEXT_PAGE;
+}
+
+export class GotoPreviousPageAction implements Action {
+  readonly type = ActionTypes.GOTO_PREVIOUS_PAGE;
+}
+
+export class LoadNextPageRequestAction implements Action {
+  readonly type = ActionTypes.LOAD_NEXT_PAGE_REQUEST;
+}
+
+export class LoadNextPageFailureAction implements Action {
+  readonly type = ActionTypes.LOAD_NEXT_PAGE_FAILURE;
+  constructor(public payload: { error: string }) {}
+}
+
+export class LoadNextPageSuccessAction implements Action {
+  readonly type = ActionTypes.LOAD_NEXT_PAGE_SUCCESS;
+  constructor(public payload: { results: GithubSearchResults }) {}
+}
+
 export type Actions =
   | UpdateSearchQueryAction
   | SearchRequestAction
@@ -67,4 +94,9 @@ export type Actions =
   | ShowDetailsAction
   | LoadUserRequestAction
   | LoadUserSuccessAction
-  | LoadUserFailureAction;
+  | LoadUserFailureAction
+  | GotoNextPageAction
+  | GotoPreviousPageAction
+  | LoadNextPageRequestAction
+  | LoadNextPageFailureAction
+  | LoadNextPageSuccessAction;

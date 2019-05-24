@@ -6,7 +6,7 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import {
   GithubSearchOrder,
@@ -22,9 +22,6 @@ import {
 export class SearchFormComponent implements OnInit, OnDestroy {
   @Input() isLoading: boolean;
   @Output() updateSearchQuery = new EventEmitter<GithubSearchQuery>();
-
-  GithubSearchSort = GithubSearchSort;
-  GithubSearchOrder = GithubSearchOrder;
 
   form: FormGroup;
 
@@ -48,7 +45,7 @@ export class SearchFormComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.form = this.fb.group({
-      query: [''],
+      query: ['', Validators.required],
       sort: [GithubSearchSort.Repositories],
       order: [GithubSearchOrder.Descending]
     });

@@ -20,9 +20,12 @@ export class GithubService {
   searchUsers(
     query: string,
     sort: GithubSearchSort,
-    order: GithubSearchOrder
+    order: GithubSearchOrder,
+    page: number = 1
   ): Observable<GithubSearchResults> {
-    const params = new HttpParams().set('q', `${query}+sort:${sort}-${order}`);
+    const params = new HttpParams()
+      .set('q', `${query}+sort:${sort}-${order}`)
+      .set('page', page.toString());
     return this.http.get<GithubSearchResults>(
       `${this.API_BASE_URL}/search/users`,
       {
@@ -31,7 +34,7 @@ export class GithubService {
     );
   }
 
-  getUser(url: string) {
+  getUser(url: string): Observable<GithubUser> {
     return this.http.get<GithubUser>(url);
   }
 }

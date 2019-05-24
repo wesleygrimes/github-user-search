@@ -1,6 +1,6 @@
-<form [formGroup]="form">
+<form [formGroup]="form" novalidate (ngSubmit)="search()">
   <div class="form-row">
-    <div class="form-group col-md-8">
+    <div class="form-group col-md-6">
       <label for="query">Query</label>
       <input
         type="text"
@@ -9,30 +9,31 @@
         formControlName="query"
       />
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-md-3">
       <label for="sort">Sort</label>
-      <select class="form-control" formControlName="sort"
-        ><option
-          *ngFor="let searchSort of GithubSearchSort"
-          [value]="searchSort"
-          >{{ searchSort }}</option
-        ></select
-      >
+      <select class="form-control" formControlName="sort">
+        <option value="followers">Followers</option>
+        <option value="repositories">Repositories</option>
+        <option value="joined">Joined</option>
+      </select>
     </div>
-    <div class="form-group col-md-2">
+    <div class="form-group col-md-3">
       <label for="order">Order</label>
-      <select class="form-control" formControlName="order"
-        ><option
-          *ngFor="let searchOrder of GithubSearchOrder"
-          [value]="searchOrder"
-          >{{ searchOrder }}</option
-        ></select
-      >
+      <select class="form-control" formControlName="order">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
     </div>
   </div>
   <div class="form-row">
     <div class="form-group col">
-      <button *ngIf="!isLoading" class="btn btn-primary" (click)="search()">
+      <button
+        *ngIf="!isLoading"
+        class="btn btn-primary"
+        (click)="search()"
+        type="submit"
+        [disabled]="!form.valid"
+      >
         Search
       </button>
       <button *ngIf="isLoading" class="btn btn-primary" disabled>

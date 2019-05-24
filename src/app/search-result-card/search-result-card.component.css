@@ -5,6 +5,7 @@ img {
 
 :host {
   margin: 25px;
+  cursor: pointer;
 }
 
 .card {

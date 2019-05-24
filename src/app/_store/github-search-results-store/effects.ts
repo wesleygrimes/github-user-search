@@ -6,11 +6,13 @@ import { Observable, of as observableOf } from 'rxjs';
 import {
   catchError,
   concatMap,
+  filter,
   map,
   switchMap,
   withLatestFrom
 } from 'rxjs/operators';
 import { UserDetailsModalComponent } from 'src/app/user-details-modal/user-details-modal.component';
+import { serializeError } from 'src/app/utils/serialize-error';
 import { GithubUser } from 'src/app/_models';
 import { GithubService } from 'src/app/_services';
 import { GithubSearchResultsStoreSelectors } from '.';
@@ -72,7 +74,65 @@ export class GithubSearchResultsStoreEffects {
             })
         ),
         catchError(error =>
-          observableOf(new featureActions.SearchFailureAction({ error }))
+          observableOf(
+            new featureActions.SearchFailureAction({
+              error: serializeError(error).message
+            })
+          )
+        )
+      )
+    )
+  );
+
+  @Effect()
+  requestLoadNextPageOnGotoNextPageEffect$: Observable<
+    Action
+  > = this.actions$.pipe(
+    ofType<featureActions.GotoNextPageAction>(
+      featureActions.ActionTypes.GOTO_NEXT_PAGE
+    ),
+    map(() => new featureActions.LoadNextPageRequestAction())
+  );
+
+  @Effect()
+  loadNextPageIfNeededRequestEffect$: Observable<Action> = this.actions$.pipe(
+    ofType<featureActions.LoadNextPageRequestAction>(
+      featureActions.ActionTypes.LOAD_NEXT_PAGE_REQUEST
+    ),
+    withLatestFrom(
+      this.store.select(
+        GithubSearchResultsStoreSelectors.selectGithubSearchResultsIsCurrentPageRetrieved
+      )
+    ),
+    filter(([_, isPageRetrieved]) => !isPageRetrieved),
+    withLatestFrom(
+      this.store.select(
+        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentQuery
+      ),
+      this.store.select(
+        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentSort
+      ),
+      this.store.select(
+        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentOrder
+      ),
+      this.store.select(
+        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentPage
+      )
+    ),
+    concatMap(([_, query, sort, order, page]) =>
+      this.githubService.searchUsers(query, sort, order, page).pipe(
+        map(
+          results =>
+            new featureActions.LoadNextPageSuccessAction({
+              results
+            })
+        ),
+        catchError(error =>
+          observableOf(
+            new featureActions.LoadNextPageFailureAction({
+              error: serializeError(error).message
+            })
+          )
         )
       )
     )
@@ -93,7 +153,11 @@ export class GithubSearchResultsStoreEffects {
             })
         ),
         catchError(error =>
-          observableOf(new featureActions.LoadUserFailureAction({ error }))
+          observableOf(
+            new featureActions.LoadUserFailureAction({
+              error: serializeError(error).message
+            })
+          )
         )
       )
     )

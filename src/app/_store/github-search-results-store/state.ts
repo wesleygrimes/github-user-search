@@ -12,13 +12,14 @@ export const featureAdapter = createEntityAdapter<GithubSearchResult>({
 
 export interface State extends EntityState<GithubSearchResult> {
   isLoading: boolean;
-  error: any;
+  error: string;
   totalCount: number;
   incompleteResults: boolean;
   currentQuery: string;
   currentSort: GithubSearchSort;
   currentOrder: GithubSearchOrder;
   currentUser: GithubUser;
+  currentPage: number;
 }
 
 export const initialState: State = featureAdapter.getInitialState({
@@ -29,5 +30,6 @@ export const initialState: State = featureAdapter.getInitialState({
   currentQuery: null,
   currentSort: GithubSearchSort.Repositories,
   currentOrder: GithubSearchOrder.Descending,
-  currentUser: null
+  currentUser: null,
+  currentPage: 1
 });

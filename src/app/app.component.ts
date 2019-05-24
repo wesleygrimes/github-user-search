@@ -14,16 +14,19 @@ import { RootState } from './_store/root-state';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  results$: Observable<GithubSearchResult[]>;
+  resultsForCurrentPage$: Observable<GithubSearchResult[]>;
   isLoading$: Observable<boolean>;
   error$: Observable<string>;
   totalCount$: Observable<number>;
 
+  hasPreviousPage$: Observable<boolean>;
+  hasNextPage$: Observable<boolean>;
+
   constructor(private store: Store<RootState>) {}
 
   ngOnInit() {
-    this.results$ = this.store.select(
-      GithubSearchResultsStoreSelectors.selectAllGithubSearchResultsItems
+    this.resultsForCurrentPage$ = this.store.select(
+      GithubSearchResultsStoreSelectors.selectGithubSearchResultsForCurrentPage
     );
     this.isLoading$ = this.store.select(
       GithubSearchResultsStoreSelectors.selectGithubSearchResultsIsLoading
@@ -33,6 +36,12 @@ export class AppComponent implements OnInit {
     );
     this.totalCount$ = this.store.select(
       GithubSearchResultsStoreSelectors.selectGithubSearchResultsTotalCount
+    );
+    this.hasPreviousPage$ = this.store.select(
+      GithubSearchResultsStoreSelectors.selectGithubSearchResultsHasPreviousPage
+    );
+    this.hasNextPage$ = this.store.select(
+      GithubSearchResultsStoreSelectors.selectGithubSearchResultsHasNextPage
     );
   }
 
@@ -47,6 +56,18 @@ export class AppComponent implements OnInit {
   onShowDetails(userUrl: string) {
     this.store.dispatch(
       new GithubSearchResultsStoreActions.ShowDetailsAction({ userUrl })
+    );
+  }
+
+  onGotoPreviousPage() {
+    this.store.dispatch(
+      new GithubSearchResultsStoreActions.GotoPreviousPageAction()
+    );
+  }
+
+  onGotoNextPage() {
+    this.store.dispatch(
+      new GithubSearchResultsStoreActions.GotoNextPageAction()
     );
   }
 }
