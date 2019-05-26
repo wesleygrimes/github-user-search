@@ -1,6 +1,6 @@
 # GithubUserSearch
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+This project was an exercise to see how much functionality I could build into an app in 4 hours. It's not perfect, but it works and follows best practices. It is using Angular v7 with NgRx for state management.
 
 ## Development server
 
