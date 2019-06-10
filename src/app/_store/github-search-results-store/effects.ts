@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
-import { Observable, of as observableOf } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { of as observableOf } from 'rxjs';
 import {
   catchError,
   concatMap,
@@ -28,152 +28,140 @@ export class GithubSearchResultsStoreEffects {
     private modalService: NgbModal
   ) {}
 
-  @Effect()
-  searchOnUpdateQueryEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.UpdateSearchQueryAction>(
-      featureActions.ActionTypes.UPDATE_SEARCH_QUERY
-    ),
-    map(() => new featureActions.SearchRequestAction())
+  searchOnUpdateQueryEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.updateSearchQuery),
+      map(() => featureActions.searchRequest())
+    )
   );
 
-  @Effect()
-  loadUserOnShowDetailsEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.ShowDetailsAction>(
-      featureActions.ActionTypes.SHOW_DETAILS
-    ),
-    map(
-      action =>
-        new featureActions.LoadUserRequestAction({
-          url: action.payload.userUrl
+  loadUserOnShowDetailsEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.showDetails),
+      map(({ userUrl }) =>
+        featureActions.loadUserRequest({
+          url: userUrl
         })
+      )
     )
   );
 
-  @Effect()
-  searchRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.SearchRequestAction>(
-      featureActions.ActionTypes.SEARCH_REQUEST
-    ),
-    withLatestFrom(
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentQuery
+  searchRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.searchRequest),
+      withLatestFrom(
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentQuery
+        ),
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentSort
+        ),
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentOrder
+        )
       ),
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentSort
-      ),
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentOrder
-      )
-    ),
-    concatMap(([_, query, sort, order]) =>
-      this.githubService.searchUsers(query, sort, order).pipe(
-        map(
-          results =>
-            new featureActions.SearchSuccessAction({
+      concatMap(([_, query, sort, order]) =>
+        this.githubService.searchUsers(query, sort, order).pipe(
+          map(results =>
+            featureActions.searchSuccess({
               results
             })
-        ),
-        catchError(error =>
-          observableOf(
-            new featureActions.SearchFailureAction({
-              error: serializeError(error).message
-            })
+          ),
+          catchError(error =>
+            observableOf(
+              featureActions.searchFailure({
+                error: serializeError(error).message
+              })
+            )
           )
         )
       )
     )
   );
 
-  @Effect()
-  requestLoadNextPageOnGotoNextPageEffect$: Observable<
-    Action
-  > = this.actions$.pipe(
-    ofType<featureActions.GotoNextPageAction>(
-      featureActions.ActionTypes.GOTO_NEXT_PAGE
-    ),
-    map(() => new featureActions.LoadNextPageRequestAction())
+  requestLoadNextPageOnGotoNextPageEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.gotoNextPage),
+      map(() => featureActions.loadNextPageRequest())
+    )
   );
 
-  @Effect()
-  loadNextPageIfNeededRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LoadNextPageRequestAction>(
-      featureActions.ActionTypes.LOAD_NEXT_PAGE_REQUEST
-    ),
-    withLatestFrom(
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsIsCurrentPageRetrieved
-      )
-    ),
-    filter(([_, isPageRetrieved]) => !isPageRetrieved),
-    withLatestFrom(
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentQuery
+  loadNextPageIfNeededRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.loadNextPageRequest),
+      withLatestFrom(
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsIsCurrentPageRetrieved
+        )
       ),
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentSort
+      filter(([_, isPageRetrieved]) => !isPageRetrieved),
+      withLatestFrom(
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentQuery
+        ),
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentSort
+        ),
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentOrder
+        ),
+        this.store.select(
+          GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentPage
+        )
       ),
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentOrder
-      ),
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentPage
-      )
-    ),
-    concatMap(([_, query, sort, order, page]) =>
-      this.githubService.searchUsers(query, sort, order, page).pipe(
-        map(
-          results =>
-            new featureActions.LoadNextPageSuccessAction({
+      concatMap(([_, query, sort, order, page]) =>
+        this.githubService.searchUsers(query, sort, order, page).pipe(
+          map(results =>
+            featureActions.loadNextPageSuccess({
               results
             })
-        ),
-        catchError(error =>
-          observableOf(
-            new featureActions.LoadNextPageFailureAction({
-              error: serializeError(error).message
-            })
+          ),
+          catchError(error =>
+            observableOf(
+              featureActions.loadNextPageFailure({
+                error: serializeError(error).message
+              })
+            )
           )
         )
       )
     )
   );
 
-  @Effect()
-  loadUserRequestEffect$: Observable<Action> = this.actions$.pipe(
-    ofType<featureActions.LoadUserRequestAction>(
-      featureActions.ActionTypes.LOAD_USER_REQUEST
-    ),
-    map(action => action.payload),
-    switchMap(({ url }) =>
-      this.githubService.getUser(url).pipe(
-        map(
-          user =>
-            new featureActions.LoadUserSuccessAction({
+  loadUserRequestEffect$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(featureActions.loadUserRequest),
+      switchMap(({ url }) =>
+        this.githubService.getUser(url).pipe(
+          map(user =>
+            featureActions.loadUserSuccess({
               user
             })
-        ),
-        catchError(error =>
-          observableOf(
-            new featureActions.LoadUserFailureAction({
-              error: serializeError(error).message
-            })
+          ),
+          catchError(error =>
+            observableOf(
+              featureActions.loadUserFailure({
+                error: serializeError(error).message
+              })
+            )
           )
         )
       )
     )
   );
 
-  @Effect({ dispatch: false })
-  showUserDetailsModalOnLoadUserSuccessEffect$ = this.actions$.pipe(
-    ofType<featureActions.LoadUserSuccessAction>(
-      featureActions.ActionTypes.LOAD_USER_SUCCESS
-    ),
-    withLatestFrom(
-      this.store.select(
-        GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentUser
-      )
-    ),
-    map(([_, user]) => this.showUserDetailsModal(user))
+  showUserDetailsModalOnLoadUserSuccessEffect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(featureActions.loadUserSuccess),
+        withLatestFrom(
+          this.store.select(
+            GithubSearchResultsStoreSelectors.selectGithubSearchResultsCurrentUser
+          )
+        ),
+        map(([_, user]) => this.showUserDetailsModal(user))
+      ),
+    { dispatch: false }
   );
 
   private showUserDetailsModal(user: GithubUser) {

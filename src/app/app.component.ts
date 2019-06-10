@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
 
   onUpdateSearchQuery(searchQuery: GithubSearchQuery) {
     this.store.dispatch(
-      new GithubSearchResultsStoreActions.UpdateSearchQueryAction({
+      GithubSearchResultsStoreActions.updateSearchQuery({
         searchQuery
       })
     );
@@ -55,19 +55,15 @@ export class AppComponent implements OnInit {
 
   onShowDetails(userUrl: string) {
     this.store.dispatch(
-      new GithubSearchResultsStoreActions.ShowDetailsAction({ userUrl })
+      GithubSearchResultsStoreActions.showDetails({ userUrl })
     );
   }
 
   onGotoPreviousPage() {
-    this.store.dispatch(
-      new GithubSearchResultsStoreActions.GotoPreviousPageAction()
-    );
+    this.store.dispatch(GithubSearchResultsStoreActions.gotoPreviousPage());
   }
 
   onGotoNextPage() {
-    this.store.dispatch(
-      new GithubSearchResultsStoreActions.GotoNextPageAction()
-    );
+    this.store.dispatch(GithubSearchResultsStoreActions.gotoNextPage());
   }
 }
